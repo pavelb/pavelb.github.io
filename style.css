@@ -1,0 +1,10 @@
+/* Custom page CSS
+-------------------------------------------------- */
+.container {
+  width: auto;
+  max-width: 300px;
+  padding: 0 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}

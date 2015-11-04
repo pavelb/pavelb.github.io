@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Ray Tracer Presentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="shadowbox.css">
+<script type="text/javascript" src="jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="shadowbox.js"></script>
+<script type="text/javascript">
+Shadowbox.init({
+	handleOversize: "resize"
+});
+</script>
+</head>
+<body>
+<div class="body">
+
+<br><br>
+
+<h2>Hello! My name is Pavel Bahilov and this is my</h2>
+<h1>CS488 Project</h2>
+
+<br><br><br><br><br>
+
+<p>For my <strong>first objective</strong> I added some cool primitives.</p>
+<p>I started with the basics: a cone, a cylinder, and a torus.</p>
+
+<a href="img/1.0 primitives1_hd.png" rel="shadowbox"><img src="img/1.0 primitives1_hd.png" width=480 height=270 /></a>
+
+<p>Next I thought it would be interesting to flex my math muscle and draw a couple of implicitly defined quartic surfaces.</p>
+
+<p>Here is a surface that was discovered by <a href="http://math.stackexchange.com/questions/46212/interesting-implicit-surfaces-in-mathbbr3/46222#46222">Leon Lampret</a>.</p>
+
+<a href="img/1.5 lampert.png" rel="shadowbox"><img src="img/1.5 lampert.png" width=480 height=270 /></a>
+
+<p>This next one was divined by <a href="http://mathworld.wolfram.com/GoursatsSurface.html">Edouard Goursat</a> and bares his name.</p>
+
+<p>A Goursat Surface is defined by three parameters. In this picture the triplets from left to right are (0.984182, -0.974414, 0.152661), (0, -1, 0.5), and (0.0879882, -0.389485, -0.231945).</p>
+
+<a href="img/1.5 goursat.png" rel="shadowbox"><img src="img/1.5 goursat.png" width=480 height=270 /></a>
+
+<br><br><br><br><br><br>
+
+<p>For my <strong>second objective</strong> I added adaptive super-sampling.</p>
+
+<p>The idea is to set a threshold on the standard deviation between the
+sampled colours. When the deviation is too great the pixel is deemed under-sampled and more samples are generated.</p>
+
+<p>In this image the under-sampled pixels are marked as white.</p>
+
+<a href="img/2.0 adptive_supersampling.png" rel="shadowbox"><img src="img/2.0 adptive_supersampling.png" width=480 height=270 /></a>
+
+<br><br><br><br><br><br>
+
+<p>For my <strong>third objective</strong> I made two shadow improvements.
+
+<p>First, I extended the basic point-light sources to a spherical ones producing soft shadows.</p>
+
+<a href="img/3.0 soft_shadows_hd.png" rel="shadowbox"><img src="img/3.0 soft_shadows_hd.png" width=480 height=270 /></a>
+
+<p>Second, I added ambient occlusion to improve shading, most notably in areas that are only illuminated by ambient light.</p>
+
+<p>This picture was rendered without ambient light. The entire left side of the <a href="http://www.mrbluesummers.com/3572/downloads/stanford-dragon-model">Stanford dragon</a> is missing definition.</p>
+
+<a href="img/3.5 ambient_occlusion_1.png" rel="shadowbox[ao]"><img src="img/3.5 ambient_occlusion_1.png" width=480 height=270 /></a>
+
+<p>Turning on ambient occlusion leads to a much more realistic image. Stunning!</p>
+
+<a href="img/3.5 ambient_occlusion_2.png" rel="shadowbox[ao]"><img src="img/3.5 ambient_occlusion_2.png" width=480 height=270 /></a>
+
+<br><br><br><br><br><br>
+
+<p>For my <strong>fourth objective</strong> I added space partitioning.</p>
+
+<p>I divided the scene into uniform voxels and used a novel idea from the 2008 paper by Ares Lagae & Philip Dutre titled "Compact, Fast and Robust Grids for Ray Tracing" to efficiently store the voxel data.</p>
+
+<p>To traverse the grid I used the 3D Digital Differential Analyzer algorithm.</p>
+
+<p>This picture shows an 11x11 grid of <a href="http://www.mrbluesummers.com/3572/downloads/stanford-dragon-model">Stanford dragons</a>. The scene is composed of 12.1M polygons.</p>
+
+<a href="img/4.0 space_partitioning.png" rel="shadowbox"><img src="img/4.0 space_partitioning.png" width=480 height=270 /></a>
+
+<br><br><br><br><br><br>
+
+<p>For my <strong>fifth objective</strong> I added multi-threading.</p>
+
+<p>The model that I used was to have some number of workers and one foreman. Each worker comes to the foreman to drop off the work it had completed and on the way back picks up more work if there is any. Using this approach means no threads are idling unless the picture is almost done rendering.</p>
+
+<p>Surprisingly the only special consideration I had to make was to implement
+a thread-safe pseudo-random number generator. Although, having multi-threading prevented me from adding some other optimization techniques such as mailboxing and shadow caching.</p>
+
+<p>Here is a diagram showing the number of threads used vs time taken when generating the above 12.1M polygon image on my 4ghz quad-core (8 hyperthreaded) Core i7 CPU.</p>
+
+<a href="img/chart_1.png" rel="shadowbox"><img src="img/chart_1.png" /></a>
+
+<br><br><br><br><br><br>
+
+<p>For my <strong>sixth objective</strong> I added refractive materials.</p>
+
+<p>This scene shows two perfectly specular refractive spheres.<p>
+
+<a href="img/6.0 refractions_hd.png" rel="shadowbox"><img src="img/6.0 refractions_hd.png" width=480 height=270 /></a>
+
+<p>But wait, there's more! Perfectly specular refractions look boring, plus one of my project goals was to simulate ice, so I added diffuse refractions.<p>
+
+<a href="img/6.5 refractions_glossy_hd.png" rel="shadowbox"><img src="img/6.5 refractions_glossy_hd.png" width=480 height=270 /></a>
+
+<br><br><br><br><br><br>
+
+<p>For my <strong>seventh objective</strong> I extended the reflective material I introduced in assignment 4 to include diffuse reflections.</p>
+
+<p>This picture is one of my favorites. I was blown away when I first saw it.</p>
+
+<a href="img/7.0 reflections_glossy_hd.png" rel="shadowbox"><img src="img/7.0 reflections_glossy_hd.png" width=480 height=270 /></a>
+
+<br><br><br><br><br><br>
+
+<p>For my <strong>eighth objective</strong> I added two types of solid textures.</p>
+
+<p>A checkered texture:</p>
+
+<a href="img/8.5 checkered.png" rel="shadowbox"><img src="img/8.5 checkered.png" width=480 height=270 /></a>
+
+<p>And a veiny marble-like texture:</p>
+
+<a href="img/8.0 perlin.png" rel="shadowbox"><img src="img/8.0 perlin.png" width=480 height=270 /></a>
+
+<br><br><br><br><br><br>
+
+<p>For my <strong>ninth objective</strong> I added depth of field.</p>
+
+<p>I did this by using a non-zero aperture radius of the virtual camera. Now we can specify the f-stop (shutter speed) of the camera to achieve more realistic results.</p>
+
+<p>Here is a series of photos showing the effect in action.</p>
+
+<a href="img/9.0 depth_of_field_1.png" rel="shadowbox[dof]"><img src="img/9.0 depth_of_field_1.png" width=480 height=270 /></a>
+
+<a href="img/9.0 depth_of_field_2.png" rel="shadowbox[dof]"><img src="img/9.0 depth_of_field_2.png" width=480 height=270 /></a>
+
+<a href="img/9.0 depth_of_field_3.png" rel="shadowbox[dof]"><img src="img/9.0 depth_of_field_3.png" width=480 height=270 /></a>
+
+<br><br><br><br><br><br>
+
+<p>For my <strong>tenth objective</strong> I created a unique scene.</p>
+
+<p>For the past two weeks I could to little else besides my project. After over a hundred hours spent I can truly say this has been an amazing experience; one that I will not soon forget.</p>
+
+<p>Looks like there is nothing left but to show you the ultimate fruit of my labor. I present to you</p>
+
+
+<br><br><br><br><br><br><br><br>
+<a class="final-scene" href="img/10.0 final_hd 2.png" rel="shadowbox">my final scene...</a>
+<br><br><br><br><br><br><br><br><br><br><br>
+
+<div class="few-more"><a href="more.html">few more pictures...</a></div>
+
+</div>
+
+</body>
+</html>
