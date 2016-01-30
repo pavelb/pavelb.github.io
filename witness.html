@@ -45,7 +45,7 @@
       var row = $('<tr/>');
       for (var j = 0; j < cols; ++j) {
         var cell = $('<td class="off">&nbsp;</td>');
-        cell.bind('touchstart mousedown', function() {
+        cell.bind('touchstart', function() {
           var cell = $(this);
           if (cell.hasClass('off')) {
             cell.removeClass('off').addClass('on');
