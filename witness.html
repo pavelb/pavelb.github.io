@@ -1,0 +1,62 @@
+<html>
+<head>
+  <style>
+    body {
+      background-color: #FFF;
+    }
+    table {
+      border-spacing: 20px;
+    }
+    td {
+      line-height: 80px;
+      width: 80px;
+    }
+    .off {
+      background-color: #E6B000;
+    }
+    .on {
+      background-color: #FFF478;
+    }
+  </style>
+</head>
+<body>
+  <center><table id="grid"></table></center>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script>
+    var getUrlParameter = function getUrlParameter(sParam) {
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+          sURLVariables = sPageURL.split('&'),
+          sParameterName,
+          i;
+
+      for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split('=');
+
+          if (sParameterName[0] === sParam) {
+              return sParameterName[1] === undefined ? true : sParameterName[1];
+          }
+      }
+    };
+
+    var rows = getUrlParameter('rows') || 4;
+    var cols = getUrlParameter('cols') || 4;
+    var grid = $('#grid');
+    for (var i = 0; i < rows; ++i) {
+      var row = $('<tr/>');
+      for (var j = 0; j < cols; ++j) {
+        var cell = $('<td class="off">&nbsp;</td>');
+        cell.click(function() {
+          var cell = $(this);
+          if (cell.hasClass('off')) {
+            cell.removeClass('off').addClass('on');
+          } else {
+            cell.removeClass('on').addClass('off');
+          }
+        });
+        row.append(cell);
+      }
+      grid.append(row);
+    }
+  </script>
+</body>
+</html>
