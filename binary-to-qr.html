@@ -1,0 +1,66 @@
+<html>
+<head>
+  <style>
+    body {
+      background-color: #FFF;
+    }
+    table {
+      border-spacing: 0px;
+    }
+    td {
+      line-height: 4px;
+      width: 4px;
+    }
+    .zero {
+      background-color: #FFF;
+    }
+    .one {
+      background-color: #000;
+    }
+  </style>
+</head>
+<body>
+  <pre>
+    Supply the number of columns and the binary string as url parameters.
+    Example: binary-to-qr.html?cols=5&b=01010000001000101110
+  </pre>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script>
+    var getUrlParameter = function(sParam) {
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+          sURLVariables = sPageURL.split('&'),
+          sParameterName,
+          i;
+      for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split('=');
+          if (sParameterName[0] === sParam) {
+              return sParameterName[1] === undefined ? true : sParameterName[1];
+          }
+      }
+    };
+    var printQR = function(b, cols) {
+      var center = $('<center>');
+      var grid = $('<table>');
+      var i = 0;
+      while (i < b.length) {
+        var row = $('<tr/>');
+        for (var col = 0; col < cols; ++col) {
+          var cell = $('<td>&nbsp;</td>');
+          cell.addClass(b.charAt(i) === '0' ? 'zero' : 'one');
+          row.append(cell);
+          i += 1;
+          if (i === b.length) {
+            break;
+          }
+        }
+        grid.append(row);
+      }
+      center.append(grid);
+      $(document.body).append(center);
+    };
+    var cols = getUrlParameter('cols');
+    var b = getUrlParameter('b');
+    printQR(b, cols);
+  </script>
+</body>
+</html>
