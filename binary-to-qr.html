@@ -39,23 +39,18 @@
       }
     };
     var printQR = function(b, cols) {
-      var center = $('<center>');
-      var grid = $('<table>');
-      var i = 0;
-      while (i < b.length) {
-        var row = $('<tr/>');
+      var size = 10;
+      var rows = Math.ceil(b.length / cols);
+      var canvas = $('<canvas width="' + (cols * size) + 'px" height="' + (rows * size) + 'px">');
+      var ctx = canvas[0].getContext('2d');
+      for (var row = 0; row < rows; ++row) {
         for (var col = 0; col < cols; ++col) {
-          var cell = $('<td>&nbsp;</td>');
-          cell.addClass(b.charAt(i) === '0' ? 'zero' : 'one');
-          row.append(cell);
-          i += 1;
-          if (i === b.length) {
-            break;
-          }
+          ctx.fillStyle = b.charAt(row * cols + col) === '1' ? '#000' : '#FFF';
+          ctx.fillRect(col * size, row * size, size, size);
         }
-        grid.append(row);
       }
-      center.append(grid);
+      var center = $('<center>');
+      center.append(canvas);
       $(document.body).append(center);
     };
     var cols = getUrlParameter('cols');
