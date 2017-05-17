@@ -1,15 +1,12 @@
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAEBUlEQVRoQ+2Zi5FNQRCG/40AESACRIAIEAEiQASIABGwESACRIAIEAEioL5b07f6zs7MmZ7z2K1lqm7d18w5/fVrevoc6ZyMo3PCoSVArki6LOmWpI+Sfkj6vrWC5oAg+NMEkMsN0PMEtgnTKAgAz5KEv5PAXyRdT2AX0n/MAWj1MQLyQNLrJBlCGpAXlt+AZTyU9GZtkigI8fBZ0sUOAQ34l6SrknhfbURBXkp6JOlYEoJODSxxX9IrSY8nJqMc5nJdFHYjkjSiIFiDOLjdGcgkhA+SPlWSgrHhhoACYwMrdme/KMifdJfIutYaBCfe7mbW+poUNmXx/f8RgVg0AtISxixM5sMiWBvXfSIJN+4eURBS7LXkv3yeMyyzoX1ckGTwLcVHyK0QIgqClghGXu8cBS5yMwmEVvnOez7YKPF7hMYCWILA5jvvgPCbj5UuZUVB7AaWSi3LoNGR4feh3sRQvE8JBOHQitd4vpg5uAZatEFmQuO8AC25HlbixTpePoUbCOtIvaGRg5BB7OIlSIRgjrkN/o27LbFzGwgAuB8B31LmAagXFp99kayRxwCLfGlChct3tL/kAAZLE28MFESJMzk8iKXCewVN+NqJXZrva5Yc7CtAUHx2wXiQ2h7hLbFJAZjUj/ticWBqxeneUh4EDbPoktN2pEicNP/ABGDwFEZzb/EgpQLPfntfKCMG5BpaYm7dLFQ9iKcnE7EQbZCK+a+7gBsSt77INkpmeG+pZq08M9nE3pJ9YfkPLmelUSkR7SaW9go0gEXupEtVF68gOemfjMX+wT5iw85B9p14tjm77NkqUSyLVc25MAgAb901/ZmH0gjBbX854S01kFl1zyBgCyS/pI+bHcNZAkEeXMhca+pofLDvnTWQiDH/TZChkjqi1hlzuyxyIphm3HCNpWSxn+nCzWBnDjs5zekt95EWtO8z28Fs32Zq7SNW4wBEwXaaI98QkYVDHZX57iTaAsF8QFARh9szC1J7N8c72MmR66D2m2o+2KmRxey0c1tAI3x0Ktmgu6vf2k0oDai7TgPGegi+bVSUc8oiLMLFOKnRmNsSxjdCJnvNPSAlmFCnPOhPeaem63jdC2KymJutFfxAEBN4AZ0a6q6uuIyCRB8rBI2xKxppYnO0JrV2d2oiIHYUrvVmORSR5dAgr9rRmOsgIFbNBbUsGe4RREBsgyw9ffLn/V4rlNLpcGkUATGzlxpm1m2xR9LWkS9BYS07Ceanz01A8t4sgY917LkGAdr7XMOShjXeaIoT2PbkalXXQrvcCMtQTOZj6jmhn++Vkl9nqCUbca1cELIKYNRiQPC5O8ukrIRSWG9dfSwVucZeplGQ3oDebN5/kM1U3Xmjc2ORv9vu+TOIOVFpAAAAAElFTkSuQmCC">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 </head>
 <body style="margin:0px;padding:0px;overflow:hidden">
 <iframe id="frame" height="100%" width="100%" frameborder=0 style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" src=""></iframe>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script>
-  document.getElementById("frame").src = window.location.hash.substring(1);
-  $('#frame').on('load', function() {
-    $('#frame').contents().find('#top-bar').hide();
-  });
+document.getElementById("frame").src = window.location.hash.substring(1);
 </script>
 </body>
 </html>
