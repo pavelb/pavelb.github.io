@@ -1,14 +1,22 @@
 <html>
 <head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-  <script>
-  $.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=11&single=true&output=csv', function(data) {
-    var row = data.split('\n');
-    console.log(row);
-  });
-  </script>
-<iframe src="https://www.youtube.com/embed?start=100&listType=search&list=startopia gameplay" frameborder="0" width="1240" height="720"></iframe>
+<script>
+$.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=11&single=true&output=csv', function(data) {
+  var rows = data.split('\n');
+  var i = 1 + Math.floor(Math.random() * (rows.length - 1));
+  var row = rows[i];
+  var cells = row.split(',');
+  var name = cells[0];
+  $('<iframe />', {
+      src: 'https://www.youtube.com/embed?start=100&listType=search&list=' + name + ' gameplay',
+      frameborder: 0,
+      width: 1240,
+      height: 720
+  }).appendTo('body');
+});
+</script>
 </body>
 </html>
