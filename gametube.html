@@ -15,7 +15,7 @@ $.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMP
   var cells = row.split(',');
   var name = cells[0];
   document.getElementById("frame").src = 'https://www.youtube.com/embed?listType=search&list=' + name + ' gameplay';
-  $.get('https://www.youtube.com/results?search_query=' + name + ' gameplay', function(data2) {
+  $.get('https://www.googleapis.com/youtube/v3/search?maxResults=1&q=surfing&key=AIzaSyC_cec0UVnf6e9qfO2j6fKpjmykSH_EJbE&part=' + name + ' gameplay', function(data2) {
    console.log(data2);
   });
 });
