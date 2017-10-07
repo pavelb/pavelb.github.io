@@ -2,7 +2,8 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
-<body>
+<body style="margin:0;padding:0px;overflow:hidden">
+<iframe id="frame" style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"></iframe>
 <script>
 $.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=11&single=true&output=csv', function(data) {
   var rows = data.split('\n');
@@ -10,12 +11,7 @@ $.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMP
   var row = rows[i];
   var cells = row.split(',');
   var name = cells[0];
-  $('<iframe />', {
-      src: 'https://www.youtube.com/embed?start=100&listType=search&list=' + name + ' gameplay',
-      frameborder: 0,
-      width: 1240,
-      height: 720
-  }).appendTo('body');
+  document.getElementById("frame").src = 'https://www.youtube.com/embed?listType=search&list=' + name + ' gameplay';
 });
 </script>
 </body>
