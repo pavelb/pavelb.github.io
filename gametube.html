@@ -14,10 +14,12 @@ $.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMP
   var row = rows[i];
   var cells = row.split(',');
   var name = cells[0];
-  document.getElementById("frame").src = 'https://www.youtube.com/embed?listType=search&list=' + name + ' gameplay';
-  $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&key=AIzaSyC_cec0UVnf6e9qfO2j6fKpjmykSH_EJbE&q=' + name + ' gameplay', function(data2) {
-   console.log(data2.items[0].id.videoId);
+  var q = name + ' gameplay';
+ 
+  $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&key=AIzaSyC_cec0UVnf6e9qfO2j6fKpjmykSH_EJbE&q=' + q, function(data2) {
+   var video_id = data2.items[0].id.videoId;
    console.log(data2);
+   document.getElementById("frame").src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=300&listType=search&list=' + q;
   });
 });
 </script>
