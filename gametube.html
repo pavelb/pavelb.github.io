@@ -8,20 +8,28 @@
 if (location.protocol != 'https:') {
  location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
 }
+
+// https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=12&single=true&output=csv
+
 $.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=11&single=true&output=csv', function(data) {
-  var rows = data.split('\n');
-  var i = 1 + Math.floor(Math.random() * (rows.length - 1));
-  var row = rows[i];
-  var cells = row.split(',');
-  var name = cells[0];
-  var q = name + ' gameplay';
- 
-  $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&key=AIzaSyC_cec0UVnf6e9qfO2j6fKpjmykSH_EJbE&q=' + q, function(data2) {
-   var video_id = data2.items[0].id.videoId;
-   console.log(data2);
-   document.getElementById("frame").src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=300&listType=search&list=' + q;
-  });
+  var rows1 = data.split('\n');
+  $.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=12&single=true&output=csv', function(data) {
+   var rows2 = data.split('\n');
+   var rows = rows1.concat(rows2);
+   var i = 1 + Math.floor(Math.random() * (rows.length - 1));
+   var row = rows[i];
+   var cells = row.split(',');
+   var name = cells[0];
+   var q = name + ' gameplay';
+
+   $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&key=AIzaSyC_cec0UVnf6e9qfO2j6fKpjmykSH_EJbE&q=' + q, function(data2) {
+    var video_id = data2.items[0].id.videoId;
+    console.log(data2);
+    document.getElementById("frame").src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=300&listType=search&list=' + q;
+   });
+  }
 });
+ 
 </script>
 </body>
 </html>
