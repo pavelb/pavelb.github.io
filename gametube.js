@@ -7,10 +7,15 @@ function rng(a, b) {  // [a, b)
 }
 
 function irng(a, b) {  // [a, b]
-  return Math.floor(rng(a, b + 1));
+  var r = rng(a, b + 1);
+  console.log('raw: ' + r);
+  var f = Math.floor(r);
+  console.log('floored: ' + f);
+  return Math.floor(r);
 }
 
 function random(list) {
+  console.log('lengthl: ' + list.length);
   return list[irng(0, list.length - 1)];
 }
 
@@ -27,10 +32,6 @@ function playRandomVideo(q) {
     });
   });
 }
-
-/*if (location.protocol != 'https:') {
- location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
-}*/
 
 function playForPavel() {
   $.get(PLAY_URL, function(spreadsheet) {
@@ -60,3 +61,7 @@ function playForBrittany() {
     });
   });
 }
+
+/*if (location.protocol != 'https:') {
+ location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+}*/
