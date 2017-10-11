@@ -14,8 +14,8 @@ function random(list) {
   return list[irng(0, list.length - 1)];
 }
 
-function playRandomVideo(q) {
-  q = encodeURIComponent(q);
+function showGame(game) {
+  q = encodeURIComponent(game + ' gameplay -trailer -review');
   $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&key=' + API_KEY + '&q=' + q, function(search_results) {
     console.log(search_results);
     var video_id = random(search_results.items).id.videoId;
@@ -37,7 +37,7 @@ function playForPavel() {
     while (name == '') {
       name = random(rows).split(',')[0];
     }
-    playRandomVideo(name + ' gameplay -trailer -review');
+    showGame(name);
   });
 }
 
@@ -53,7 +53,7 @@ function playForBrittany() {
       while (name == '') {
         name = random(rows).split(',')[0];
       }
-      playRandomVideo(name + ' gameplay -trailer -review');
+      showGame(name);
     });
   });
 }
