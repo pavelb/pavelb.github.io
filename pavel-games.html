@@ -9,27 +9,43 @@
  location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
 }*/
 var api_key = 'AIzaSyC_cec0UVnf6e9qfO2j6fKpjmykSH_EJbE';
-var rng(a, b) {
-  return a + Math.floor(Math.random() * (b - a));
+function rng(a, b) {  // [a, b)
+  return a + Math.random() * (b - a);
 }
-$.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=11&single=true&output=csv', function(data) {
-  var rows = data.split('\n');
-  var name = '';
-  while (name == '') {
-    var i = Math.floor(rng(1, rows.length));
-    name = rows[i].split(',')[0];
-  }
-  var q = name + ' gameplay';
-  $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&key=' + api_key + '&q=' + q, function(search_results) {
-    console.log(search_results);
-    var video_id = search_results.items[0].id.videoId;
-    $.get('https://content.googleapis.com/youtube/v3/videos?part=contentDetails&id=' + video_id + '&key=' + api_key, function(video_details) {
-      var length = Date.parse(video_details.items[0].contentDetails.duration) / 1000;
-      var start = length * rng(1/3, 2/3);
-      document.getElementById("frame").src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=' + start + '&listType=search&list=' + q;
-    });
+function irng(a, b) {  // [a, b]
+  return Math.floor(rng(a, b + 1));
+}
+function random(list) {
+  return list[irng(0, list.length - 1)];
+}
+function load(url) {
+  var data = null;
+  $.ajax({
+    url: url,
+    success: function(result) {
+      data = result;
+    },
+    async: false
   });
-});
+  return data;
+}
+
+var spreadsheet = load('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=11&single=true&output=csv');
+var rows = spreadsheet.split('\n');
+rows.shift();  // remove heading
+var name = '';
+while (name == '') {
+  name = random(rows).split(',')[0];
+}
+var q = name + ' gameplay';
+var search_results = load('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=' + api_key + '&q=' + q);
+console.log(search_results);
+var video_id = random(search_results.items).id.videoId;
+var video_details = load('https://content.googleapis.com/youtube/v3/videos?part=contentDetails&id=' + video_id + '&key=' + api_key);
+var length = Date.parse(video_details.items[0].contentDetails.duration) / 1000;
+console.log(length);
+var start = length * rng(1/3, 2/3);
+document.getElementById("frame").src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=' + start + '&listType=search&list=' + q;
 </script>
 </body>
 </html>
