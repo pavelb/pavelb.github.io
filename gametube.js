@@ -7,20 +7,15 @@ function rng(a, b) {  // [a, b)
 }
 
 function irng(a, b) {  // [a, b]
-  var r = rng(a, b + 1);
-  console.log('raw: ' + r);
-  var f = Math.floor(r);
-  console.log('floored: ' + f);
-  return Math.floor(r);
+  return Math.floor(rng(a, b + 1));
 }
 
 function random(list) {
-  console.log('lengthl: ' + list.length);
   return list[irng(0, list.length - 1)];
 }
 
 function playRandomVideo(q) {
-  $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=' + API_KEY + '&q=' + q, function(search_results) {
+  $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&key=' + API_KEY + '&q=' + q, function(search_results) {
     console.log(search_results);
     var video_id = random(search_results.items).id.videoId;
     $.get('https://content.googleapis.com/youtube/v3/videos?part=contentDetails&id=' + video_id + '&key=' + API_KEY, function(video_details) {
