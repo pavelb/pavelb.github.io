@@ -24,7 +24,7 @@ function playRandomVideo(q) {
       var length = moment.duration(video_details.items[0].contentDetails.duration).asSeconds();
       console.log(length);
       var start = irng(length/3, 2*length/3);
-      document.getElementById("frame").src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=' + start + '&listType=search&list=' + q;
+      document.getElementById('frame').src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=' + start + '&listType=search&list=' + q;
     });
   });
 }
