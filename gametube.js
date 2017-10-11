@@ -1,5 +1,6 @@
 var API_KEY = 'AIzaSyC_cec0UVnf6e9qfO2j6fKpjmykSH_EJbE';
 var PLAY_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=11&single=true&output=csv';
+var DONE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=12&single=true&output=csv';
 
 function rng(a, b) {  // [a, b)
   return a + Math.random() * (b - a);
@@ -40,5 +41,22 @@ function playForPavel() {
       name = random(rows).split(',')[0];
     }
     playRandomVideo(name + ' gameplay');
+  });
+}
+
+function playForBrittany() {
+  $.get(PLAY_URL, function(data) {
+    var play_rows = data.split('\n');
+    play_rows.shift();  // remove heading
+    $.get(DONE_URL, function(data) {
+      var done_rows = data.split('\n');
+      done_rows.shift();  // remove heading
+      var rows = play_rows.concat(done_rows);
+      var name = '';
+      while (name == '') {
+        name = random(rows).split(',')[0];
+      }
+      playRandomVideo(name + ' gameplay');
+    });
   });
 }
