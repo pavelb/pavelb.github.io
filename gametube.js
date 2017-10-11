@@ -7,7 +7,9 @@ function rng(a, b) {  // [a, b)
 }
 
 function irng(a, b) {  // [a, b]
-  return Math.floor(rng(Math.floor(a), Math.floor(b + 1)));
+  a = Math.floor(a);
+  b = Math.floor(b);
+  return Math.floor(rng(a, b + 1));
 }
 
 function random(list) {
