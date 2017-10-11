@@ -37,7 +37,7 @@ function playForPavel() {
     while (name == '') {
       name = random(rows).split(',')[0];
     }
-    playRandomVideo(name + ' gameplay');
+    playRandomVideo(name + ' gameplay -trailer -review');
   });
 }
 
@@ -53,7 +53,7 @@ function playForBrittany() {
       while (name == '') {
         name = random(rows).split(',')[0];
       }
-      playRandomVideo(name + ' gameplay');
+      playRandomVideo(name + ' gameplay -trailer -review');
     });
   });
 }
