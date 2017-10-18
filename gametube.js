@@ -53,7 +53,11 @@ function playForBrittany() {
       var rows = play_rows.concat(done_rows);
       var name = '';
       while (name == '') {
-        name = random(rows).split(',')[0];
+        var cols = random(rows).split(',');
+        if (cols.length < 3) {
+          continue;
+        }
+        name = cols[0];
       }
       showGame(name);
     });
