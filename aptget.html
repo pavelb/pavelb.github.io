@@ -4,22 +4,46 @@
 </head>
 <body>
   <script>
-    var PLAN_ONE = '0x0000000000000753';
     var DATA_URL = 'https://www.irvinecompanyapartments.com/snp?sp_q_1=unit&sp_x_1=entityType&sp_x_3=communityIdAEM&sp_q_3=7d86836c-feda-4653-9a89-c6f4113ec655&sp_q_4=ica&sp_x_4=appId&app=icaFloorplanPage&sp_s=planName&upm_field_table=1&sp_x_2=floorplanIdCRM&sp_q_2=';
-    $.get(DATA_URL + PLAN_ONE, function(html) {
-      var page = JSON.parse(html);
-      console.log(page);
-      var first = true;
-      for (var i = 0; i < page.resultsets.length; ++i) {
-        var resultset = page.resultsets[i];
-        for (var j = 0; j < resultset.results.length; ++j) {
-          var result = resultset.results[j];
-          document.write((first ? '' : ', ') + result.unitMarketingName);
-          first = false;
-          // document.write(JSON.stringify(result, null, 2));
+    function show(plan_id) {
+      $.get(DATA_URL + plan_id, function(html) {
+        var page = JSON.parse(html);
+        console.log(page);
+        var plan = null;
+        var units = [];
+        for (var i = 0; i < page.resultsets.length; ++i) {
+          var resultset = page.resultsets[i];
+          for (var j = 0; j < resultset.results.length; ++j) {
+            var result = resultset.results[j];
+            plan = result.floorplanMarketingName;
+            units.push(result.unitMarketingName);
+            // document.write(plan_id + ' ' + result.floorplanMarketingName + ' ' + result.unitMarketingName + ', ');
+            // document.write(JSON.stringify(result, null, 2));
+          }
         }
-      }
-    });
+        if (plan) {
+          var text = result.floorplanMarketingName + ': ';
+          units.sort();
+          for (var i in units) {
+            text += (i == 0 ? '' : ', ') + units[i];
+          }
+          $(document.body).append($('<p>').text(text));
+        }
+      });
+      document.write('</ br>')
+    }
+    /*
+    for (var i = 2048; i < 2*2048; ++i) {
+      var id = (i.toString(16) + '').toUpperCase().padStart(3, '0');
+      show('0x0000000000000' + id);
+      // console.log(id);
+    }
+    */
+    var PLAN_ONE = '0x0000000000000753';
+    var plans = [PLAN_ONE, '0x000000000000075C'];
+    for (var i in plans) {
+      show(plans[i]);
+    }
   </script>
 </body>
 </html>
