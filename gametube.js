@@ -18,6 +18,7 @@ function random(list) {
 
 function showGame(game) {
   var q = encodeURIComponent(game + ' gameplay');
+  console.log('"' + q + '"');
   $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&key=' + API_KEY + '&q=' + q, function(search_results) {
     console.log(search_results);
     var video_id = random(search_results.items).id.videoId;
