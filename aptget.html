@@ -23,7 +23,11 @@
         }
         if (plan) {
           var text = result.floorplanMarketingName + ': ';
-          units.sort(function (a, b) { return a.unitMarketingName < b.unitMarketingName; });
+          units.sort(function (a, b) {
+            var c = a.unitMarketingName;
+            var d = b.unitMarketingName;
+            return c < d ? -1 : c > d ? 1 : 0;
+          });
           for (var i in units) {
             var unit = units[i];
             text += (i == 0 ? '' : ', ') + unit.unitMarketingName + ' ($' + unit.marketRent + ')';
