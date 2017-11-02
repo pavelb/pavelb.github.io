@@ -26,7 +26,7 @@
           units.sort(function (a, b) { return a.unitMarketingName < b.unitMarketingName; });
           for (var i in units) {
             var unit = units[i];
-            text += (i == 0 ? '' : ', ') + unit.unitMarketingName + '($' + unit.marketRent + ')';
+            text += (i == 0 ? '' : ', ') + unit.unitMarketingName + ' ($' + unit.marketRent + ')';
           }
           $(document.body).append($('<p>').text(text));
         }
