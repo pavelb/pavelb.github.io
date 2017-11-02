@@ -16,16 +16,17 @@
           for (var j = 0; j < resultset.results.length; ++j) {
             var result = resultset.results[j];
             plan = result.floorplanMarketingName;
-            units.push(result.unitMarketingName);
+            units.push(result);
             // document.write(plan_id + ' ' + result.floorplanMarketingName + ' ' + result.unitMarketingName + ', ');
             // document.write(JSON.stringify(result, null, 2));
           }
         }
         if (plan) {
           var text = result.floorplanMarketingName + ': ';
-          units.sort();
+          units.sort(function (a, b) { return a.unitMarketingName < b.unitMarketingName; });
           for (var i in units) {
-            text += (i == 0 ? '' : ', ') + units[i];
+            var unit = units[i];
+            text += (i == 0 ? '' : ', ') + unit.unitMarketingName + '($' + unit.marketRent + ')';
           }
           $(document.body).append($('<p>').text(text));
         }
