@@ -41,7 +41,7 @@ function playForPavel() {
     while (!name) {
       var row = random(rows).split(',');
       console.log(row);
-      var patience = 10;
+      var patience = 1000;  // catch infinite loops
       if (patience > 0 && fragment == 'have' && row[5] !== 'TRUE') {
         if (patience === 1) {
           console.log('Error: unable to find "Have" column.');
