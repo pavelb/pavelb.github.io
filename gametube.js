@@ -34,12 +34,17 @@ function showGame(game) {
 }
 
 function playForPavel() {
+  var fragment = window.location.hash.substring(1);
   $.get(PLAY_URL, function(spreadsheet) {
     var rows = spreadsheet.split('\n');
     rows.shift();  // remove heading
     var name = '';
     while (name == '') {
-      name = random(rows).split(',')[0];
+      var row = random(rows);
+      if (fragment == 'have' && row[5] !== 'TRUE') {
+        continue;
+      }
+      name = row.split(',')[0];
     }
     showGame(name);
   });
