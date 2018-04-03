@@ -41,8 +41,11 @@ function playForPavel() {
     var name = '';
     while (name == '') {
       var row = random(rows);
-      if (fragment == 'have' && row[5] !== 'TRUE') {
-        continue;
+      if (fragment == 'have') {
+        console.log(row[5]);
+        console.log(row[5] === 'TRUE');
+        console.log(row[5] === true);
+        // continue;
       }
       name = row.split(',')[0];
     }
