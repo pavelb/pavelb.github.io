@@ -40,14 +40,14 @@ function playForPavel() {
     rows.shift();  // remove heading
     var name = '';
     while (name == '') {
-      var row = random(rows);
+      var row = random(rows).split(',');
       if (fragment == 'have') {
         console.log(row[5]);
         console.log(row[5] === 'TRUE');
         console.log(row[5] === true);
         // continue;
       }
-      name = row.split(',')[0];
+      name = row[0];
     }
     showGame(name);
   });
