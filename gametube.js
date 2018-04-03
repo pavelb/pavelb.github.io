@@ -26,7 +26,6 @@ function showGame(game) {
     $.get('https://content.googleapis.com/youtube/v3/videos?part=contentDetails&id=' + video_id + '&key=' + API_KEY, function(video_details) {
       console.log(video_details);
       var length = moment.duration(video_details.items[0].contentDetails.duration).asSeconds();
-      console.log(length);
       var start = irng(length/3, 2*length/3);
       document.getElementById('frame').src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=' + start + '&listType=search&list=' + q;
     });
@@ -41,6 +40,7 @@ function playForPavel() {
     var name = '';
     while (name == '') {
       var row = random(rows).split(',');
+      console.log(row);
       if (fragment == 'have') {
         console.log(row[5]);
         console.log(row[5] === 'TRUE');
@@ -63,11 +63,12 @@ function playForBrittany() {
       var rows = play_rows.concat(done_rows);
       var name = '';
       while (name == '') {
-        var cols = random(rows).split(',');
-        if (cols.length < 3) {
+        var row = random(rows).split(',');
+        console.log(row);
+        if (row.length < 3) {
           continue;
         }
-        name = cols[0];
+        name = row[0];
       }
       showGame(name);
     });
