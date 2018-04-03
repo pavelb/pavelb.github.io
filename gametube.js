@@ -32,47 +32,44 @@ function showGame(game) {
   });
 }
 
-function playForPavel() {
-  var fragment = window.location.hash.substring(1);
-  $.get(PLAY_URL, function(spreadsheet) {
-    var rows = spreadsheet.split('\n');
-    rows.shift();  // remove heading
-    var name = '';
-    while (!name) {
-      var row = random(rows).split(',');
-      console.log(row);
-      var patience = 1000;  // catch infinite loops
-      if (patience > 0 && fragment == 'have' && row[5] !== 'TRUE') {
-        if (patience === 1) {
-          console.log('Error: unable to find "Have" column.');
-        }
-        patience -= 1;
-        continue;
-      }
-      name = row[0];
+function processRawRows(row_data) {
+  var raw_rows = row_data.split('\n');
+  var rows = [];
+  for (var i = 0; i < raw_rows.length; ++i) {
+    var row = raw_rows[i].split(',');
+    if (row.length < 3) {  // remove separators
+      continue;
     }
-    showGame(name);
-  });
+    if (row[0].trim() === '') {  // remove blank lines
+      continue;
+    }
+    if (row[0] === 'Name') {  // remove headings
+      continue;
+    }
+    if (window.location.hash.substring(1) == 'have' && row[5] !== 'TRUE') {  // remove unowned games
+      continue;
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+
+function showRandomGame(row_data) {
+  var rows = processRawRows(row_data);
+  console.log(rows);
+  var row = random(rows);
+  console.log(row);
+  showGame(row[0]);
+}
+
+function playForPavel() {
+  $.get(PLAY_URL, showRandomGame);
 }
 
 function playForBrittany() {
-  $.get(PLAY_URL, function(data) {
-    var play_rows = data.split('\n');
-    play_rows.shift();  // remove heading
-    $.get(DONE_URL, function(data) {
-      var done_rows = data.split('\n');
-      done_rows.shift();  // remove heading
-      var rows = play_rows.concat(done_rows);
-      var name = '';
-      while (name == '') {
-        var row = random(rows).split(',');
-        console.log(row);
-        if (row.length < 3) {
-          continue;
-        }
-        name = row[0];
-      }
-      showGame(name);
+  $.get(PLAY_URL, function(play_data) {
+    $.get(DONE_URL, function(done_data) {
+      showRandomGame(play_data + '\n' + done_data);
     });
   });
 }
