@@ -38,14 +38,16 @@ function playForPavel() {
     var rows = spreadsheet.split('\n');
     rows.shift();  // remove heading
     var name = '';
-    while (name == '') {
+    while (!name) {
       var row = random(rows).split(',');
       console.log(row);
-      if (fragment == 'have') {
-        console.log(row[5]);
-        console.log(row[5] === 'TRUE');
-        console.log(row[5] === true);
-        // continue;
+      var patience = 10;
+      if (patience > 0 && fragment == 'have' && row[5] !== 'TRUE') {
+        if (patience === 1) {
+          console.log('Error: unable to find "Have" column.');
+        }
+        patience -= 1;
+        continue;
       }
       name = row[0];
     }
