@@ -1,0 +1,33 @@
+<canvas id='c'></canvas>
+<textarea id='t' style='font:3em Panic Sans;width:1920px;height:1080px' onkeyup='update()'>
+c.width|=0
+for(n=i=20;i--;){
+z=4+S(A=2*Math.PI/n*i)
+x.moveTo(960+1e3*C(A)/z,540-1e3/z)
+x.lineTo(X=960+1e3*(1+S(a=S(3*t+i/3)/2))*C(A)/z,Y=540+1e3*C(a)/z)
+x.moveTo(X,Y)
+x.arc(X,Y,150/z/z,0,7)
+x.fill(x.stroke())
+}
+</textarea>
+<span id='s' style='font:3em Panic Sans'>
+<script>
+var c = document.querySelector("#c");
+var x = c.getContext("2d");
+var S = Math.sin;
+var C = Math.cos;
+var T = Math.tan;
+var R = (r,g,b,a)=>"rgba("+~~r+","+~~g+","+~~b+","+(a===undefined?1:a)+")";
+var frame = 0;
+var u = t => eval(document.querySelector("#t").value);
+setInterval(function() {
+	u(frame++/60);
+}, 1000/60);
+function update() {
+  frame = 0;
+  c.width = 1920;
+	c.height = 1080;
+	document.querySelector("#s").innerHTML = document.querySelector("#t").value.length;
+}
+update();
+</script>
