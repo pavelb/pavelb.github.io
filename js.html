@@ -1,5 +1,5 @@
-<canvas id='c'></canvas>
-<textarea id='t' style='font:3em Panic Sans;width:1920px;height:1080px' onkeyup='update()'>
+<canvas id='c' style='zoom:.3'></canvas>
+<textarea id='t' rows=20 cols=90 style='font:14px Panic Sans' onkeyup='update()'>
 c.width|=0
 for(n=i=20;i--;){
 z=4+S(A=2*Math.PI/n*i)
@@ -10,24 +10,22 @@ x.arc(X,Y,150/z/z,0,7)
 x.fill(x.stroke())
 }
 </textarea>
-<span id='s' style='font:3em Panic Sans'>
+<span id='s' style='font:14px Panic Sans'>
 <script>
-var c = document.querySelector("#c");
+var c = document.getElementById("c");
 var x = c.getContext("2d");
 var S = Math.sin;
 var C = Math.cos;
 var T = Math.tan;
 var R = (r,g,b,a)=>"rgba("+~~r+","+~~g+","+~~b+","+(a===undefined?1:a)+")";
 var frame = 0;
-var u = t => eval(document.querySelector("#t").value);
-setInterval(function() {
-	u(frame++/60);
-}, 1000/60);
+var u = t => eval(document.getElementById('t').value);
+setInterval(function() { u(frame++/60); }, 1000/60);
 function update() {
   frame = 0;
   c.width = 1920;
 	c.height = 1080;
-	document.querySelector("#s").innerHTML = document.querySelector("#t").value.length;
-}
+	document.getElementById('s').innerHTML = document.getElementById('t').value.length;
+};
 update();
 </script>
