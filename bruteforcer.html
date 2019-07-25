@@ -61,6 +61,8 @@ function* combine(list, n) {
 //for(var data=[],i=14;i--;)data.push([i,i%4-(i/4|0)%2])
 var data = [0,4,-4,0].map((n,i)=>[i,n])
 
+document.write('<pre>')
+document.write(data + '\n\n')
 function test1(p,n,output){try{return output==eval(p)}catch(err){return false}}
 function test(p){
   for (d of data) if (!test1(p, d[0], d[1])) return false;
@@ -70,13 +72,13 @@ var found = false;
 for (let n = 0; n++<6;) {
 	for (p of combine(chars.join(''), n)){
 	  if (test(p)) {
-		 alert(p)
-		 console.log(p)
-		 found = true;
-	 }
+      document.title+=p+','
+      document.write(p +'\n')
+		  found = true;
+	  }
 	}
 }
-document.write(data)
+
 /*
 for (pp of combine(chars.join(''), 4)){
   for (var i = 0; i <= pp.length; i++) {
