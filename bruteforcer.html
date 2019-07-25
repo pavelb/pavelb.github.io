@@ -59,7 +59,7 @@ function* combine(list, n) {
 //for(var data=[],i=14;--i;)data.push([i,i%3-1])
 //for(var data=[],i=14;--i;)data.push([i,(i/5|0)-1])
 //for(var data=[],i=14;i--;)data.push([i,i%4-(i/4|0)%2])
-var data = [0,4,-4,0].map((n,i)=>[i,n])
+var data = [1,1,0,0].map((n,i)=>[i,n])
 
 document.write('<pre>')
 document.write(data + '\n\n')
@@ -68,17 +68,21 @@ function test(p){
   for (d of data) if (!test1(p, d[0], d[1])) return false;
   return true;
 }
-var found = false;
-for (let n = 0; n++<6;) {
+function escapeHTML(string) {
+  var pre = document.createElement('pre');
+  var text = document.createTextNode(string);
+  pre.appendChild(text);
+  return pre.innerHTML;
+}
+for (let n = 0; n++<5;) {
 	for (p of combine(chars.join(''), n)){
 	  if (test(p)) {
       document.title+=p+','
-      document.write(p +'\n')
-		  found = true;
+      document.write(escapeHTML(p)+'\n')
 	  }
 	}
 }
-
+document.write('</pre>')
 /*
 for (pp of combine(chars.join(''), 4)){
   for (var i = 0; i <= pp.length; i++) {
