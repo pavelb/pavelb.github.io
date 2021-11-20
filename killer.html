@@ -10,6 +10,7 @@
   <style>
     .totals {
       padding: 2px;
+      display: table;
     }
     .total {
       float: left;
@@ -24,20 +25,105 @@
       font-family: monospace;
       font-size: 20px;
     }
+    .total.selected {
+      background: #f00
+    }
+
+    .partitions {
+      margin-top: 10px;
+      padding: 2px;
+      display: table;
+    }
+    .partition {
+      float: left;
+      width: 50px;
+      text-align: center;
+      vertical-align: text-bottom;
+      height: 30px;
+      line-height: 30px;
+      border: 2px;
+      background: #eee;
+      margin: 2px;
+      font-family: monospace;
+      font-size: 20px;
+    }
+    .partition.selected {
+      background: #f00
+    }
+
+    .options {
+      margin-top: 10px;
+      padding: 2px;
+      display: table;
+    }
+    .option {
+      float: left;
+      width: 100px;
+      text-align: center;
+      vertical-align: text-bottom;
+      height: 30px;
+      line-height: 30px;
+      border: 2px;
+      background: #eee;
+      margin: 2px;
+      font-family: monospace;
+      font-size: 20px;
+    }
+    .option.selected {
+      background: #ccc;
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
   <div class="totals"></div>
   <div class="partitions"></div>
+  <div class="options"></div>
   <script>
-    var totals = $('.totals');
+    let totals = $('.totals');
+    let partitions = $('.partitions');
+    let options = $('.options');
+
+    let selected_total = 0;
+    let selected_partition = 0;
+
     for (let n = 1; n <= 45; n++) {
-      let total = $('<div class="total">' + n + '</div>');
-      total.on("tap click",function(){
-        //$(this).hide();
-        alert()
-      });
-      totals.append(total);
+      totals.append($('<div class="total">' + n + '</div>').on("tap click", function() {
+        $('.total.selected').removeClass('selected');
+        $(this).addClass('selected');
+        selected_total = parseInt($(this).text(), 10);
+        showOptions();
+      }));
+    }
+
+    for (let n = 1; n <= 9; n++) {
+      partitions.append($('<div class="partition">' + n + '</div>').on("tap click", function() {
+        $('.partition.selected').removeClass('selected');
+        $(this).addClass('selected');
+        selected_partition = parseInt($(this).text(), 10);
+        showOptions();
+      }));
+    }
+
+    function showOptions() {
+      options.empty();
+      for (let option of showOptionsHelper(selected_total, selected_partition, 1, [])) {
+        options.append($('<div class="option">' + option.join('') + '</div>').on("tap click", function() {
+          $(this).toggleClass('selected');
+        }));
+      }
+    }
+
+    function* showOptionsHelper(total, partition, n, chosen) {
+      if (total === 0 && partition === 0) {
+        yield chosen;
+        return;
+      }
+      if (total < 0 || partition < 0 || n > 9) {
+        return;
+      }
+      yield* showOptionsHelper(total - n, partition - 1, n + 1, [...chosen, n]);
+      yield* showOptionsHelper(total, partition, n + 1, chosen);
     }
   </script>
 </body>
