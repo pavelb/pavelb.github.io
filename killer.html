@@ -10,6 +10,13 @@
   <style>
     body {
       touch-action: manipulation;
+      -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+         -khtml-user-select: none; /* Konqueror HTML */
+           -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                      supported by Chrome, Edge, Opera and Firefox */
     }
     .totals {
       padding: 2px;
@@ -91,7 +98,7 @@
     let selected_partition = 0;
 
     for (let n = 1; n <= 45; n++) {
-      totals.append($('<div class="total">' + n + '</div>').on("touchstart", function() {
+      totals.append($('<div class="total">' + n + '</div>').on("mousedown", function() {
         $('.total.selected').removeClass('selected');
         $(this).addClass('selected');
         selected_total = parseInt($(this).text(), 10);
@@ -100,7 +107,7 @@
     }
 
     for (let n = 1; n <= 9; n++) {
-      partitions.append($('<div class="partition">' + n + '</div>').on("touchstart", function() {
+      partitions.append($('<div class="partition">' + n + '</div>').on("mousedown", function() {
         $('.partition.selected').removeClass('selected');
         $(this).addClass('selected');
         selected_partition = parseInt($(this).text(), 10);
@@ -111,7 +118,7 @@
     function showOptions() {
       options.empty();
       for (let option of showOptionsHelper(selected_total, selected_partition, 1, [])) {
-        options.append($('<div class="option">' + option.join('') + '</div>').on("touchstart", function() {
+        options.append($('<div class="option">' + option.join('') + '</div>').on("mousedown", function() {
           $(this).toggleClass('selected');
         }));
       }
