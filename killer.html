@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Killer Sudoku Partitions</title>
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <script src="jquery-3.6.0.min.js"></script>
+  <style>
+    .totals {
+      padding: 2px;
+    }
+    .total {
+      float: left;
+      width: 50px;
+      text-align: center;
+      vertical-align: text-bottom;
+      height: 30px;
+      line-height: 30px;
+      border: 2px;
+      background: #eee;
+      margin: 2px;
+      font-family: monospace;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="totals"></div>
+  <div class="partitions"></div>
+  <script>
+    var totals = $('.totals');
+    for (let n = 1; n <= 45; n++) {
+      let total = $('<div class="total">' + n + '</div>');
+      total.on("tap click",function(){
+        //$(this).hide();
+        alert()
+      });
+      totals.append(total);
+    }
+  </script>
+</body>
+</html>
