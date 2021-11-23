@@ -17,7 +17,7 @@
             -ms-user-select: none; /* Internet Explorer/Edge */
                 user-select: none; /* Non-prefixed version, currently
                                       supported by Chrome, Edge, Opera and Firefox */
-      max-width: 512px;
+      max-width: 550px;
     }
     .totals {
       padding: 2px;
@@ -71,7 +71,7 @@
     }
     .option {
       float: left;
-      width: 117px;
+      width: 130px;
       text-align: center;
       vertical-align: text-bottom;
       line-height: 40px;
@@ -101,7 +101,7 @@
     let selected_total = 0;
     let selected_partition = 0;
 
-      for (let n = 1; n <= 45; n++) {
+      for (let n = 0; n <= 45; n++) {
         totals.append($('<div class="total">' + n + '</div>').on("mousedown", function() {
           $('.total.selected').removeClass('selected');
           $(this).addClass('selected');
