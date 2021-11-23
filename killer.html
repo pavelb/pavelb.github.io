@@ -17,23 +17,23 @@
             -ms-user-select: none; /* Internet Explorer/Edge */
                 user-select: none; /* Non-prefixed version, currently
                                       supported by Chrome, Edge, Opera and Firefox */
-      max-width: 550px;
+      max-width: 390px;
     }
-    .totals {
-      padding: 2px;
-      display: table;
-    }
-    .total {
+    .button {
       float: left;
-      width: 50px;
+      width: 34px;
       text-align: center;
       vertical-align: text-bottom;
-      line-height: 40px;
+      line-height: 50px;
       border: 2px;
       background: #eee;
       margin: 2px;
       font-family: monospace;
       font-size: 20px;
+    }
+    .totals {
+      padding: 2px;
+      display: table;
     }
     .total.selected {
       background: #f00
@@ -43,18 +43,6 @@
       margin-top: 10px;
       padding: 2px;
       display: table;
-    }
-    .partition {
-      float: left;
-      width: 50px;
-      text-align: center;
-      vertical-align: text-bottom;
-      line-height: 40px;
-      border: 2px;
-      background: #eee;
-      margin: 2px;
-      font-family: monospace;
-      font-size: 20px;
     }
     .partition.selected {
       background: #f00
@@ -70,16 +58,7 @@
       display: table;
     }
     .option {
-      float: left;
-      width: 130px;
-      text-align: center;
-      vertical-align: text-bottom;
-      line-height: 40px;
-      border: 2px;
-      background: #eee;
-      margin: 2px;
-      font-family: monospace;
-      font-size: 20px;
+      width: 123px;
     }
     .option.selected {
       background: #ccc;
@@ -102,7 +81,7 @@
     let selected_partition = 0;
 
       for (let n = 0; n <= 45; n++) {
-        totals.append($('<div class="total">' + n + '</div>').on("mousedown", function() {
+        totals.append($('<div class="button total">' + n + '</div>').on("mousedown", function() {
           $('.total.selected').removeClass('selected');
           $(this).addClass('selected');
           selected_total = parseInt($(this).text(), 10);
@@ -116,7 +95,7 @@
       }
 
     for (let n = 1; n <= 9; n++) {
-      partitions.append($('<div class="partition">' + n + '</div>').on("mousedown", function() {
+      partitions.append($('<div class="button partition">' + n + '</div>').on("mousedown", function() {
         let el = $(this);
         if (el.hasClass('impossible')) {
           return;
@@ -131,7 +110,7 @@
     function showOptions() {
       options.empty();
       for (let option of getOptions(selected_total, selected_partition)) {
-        options.append($('<div class="option">' + option.join('') + '</div>').on("mousedown", function() {
+        options.append($('<div class="button option">' + option.join('') + '</div>').on("mousedown", function() {
           $(this).toggleClass('selected');
         }));
       }
