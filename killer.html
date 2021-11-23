@@ -58,6 +58,10 @@
     .partition.selected {
       background: #f00
     }
+    .partition.impossible {
+      background: #ccc;
+      color: #aaa;
+    }
 
     .options {
       margin-top: 10px;
@@ -91,46 +95,69 @@
     let partitions = $('.partitions');
     let options = $('.options');
 
+    let option_table = [];
+    genOptions();
     let selected_total = 0;
     let selected_partition = 0;
 
-    for (let n = 1; n <= 45; n++) {
-      totals.append($('<div class="total">' + n + '</div>').on("mousedown", function() {
-        $('.total.selected').removeClass('selected');
-        $(this).addClass('selected');
-        selected_total = parseInt($(this).text(), 10);
-        showOptions();
-      }));
-    }
+      for (let n = 1; n <= 45; n++) {
+        totals.append($('<div class="total">' + n + '</div>').on("mousedown", function() {
+          $('.total.selected').removeClass('selected');
+          $(this).addClass('selected');
+          selected_total = parseInt($(this).text(), 10);
+          partitions.children().each(function () {
+            let el = $(this);
+            const partition = parseInt(el.text(), 10);
+            el.toggleClass('impossible', getOptions(selected_total, partition).length === 0);
+          });
+          showOptions();
+        }));
+      }
 
     for (let n = 1; n <= 9; n++) {
       partitions.append($('<div class="partition">' + n + '</div>').on("mousedown", function() {
+        let el = $(this);
+        if (el.hasClass('impossible')) {
+          return;
+        }
         $('.partition.selected').removeClass('selected');
-        $(this).addClass('selected');
-        selected_partition = parseInt($(this).text(), 10);
+        el.addClass('selected');
+        selected_partition = parseInt(el.text(), 10);
         showOptions();
       }));
     }
 
     function showOptions() {
       options.empty();
-      for (let option of showOptionsHelper(selected_total, selected_partition, 1, [])) {
+      for (let option of getOptions(selected_total, selected_partition)) {
         options.append($('<div class="option">' + option.join('') + '</div>').on("mousedown", function() {
           $(this).toggleClass('selected');
         }));
       }
     }
 
-    function* showOptionsHelper(total, partition, n, chosen) {
-      if (total === 0 && partition === 0) {
-        yield chosen;
+    function genOptions(digit=1, total=0, list=[], add=false) {
+      if (add) {
+        if (!option_table[total]) {
+          option_table[total] = [];
+        }
+        if (!option_table[total][list.length]) {
+          option_table[total][list.length] = [];
+        }
+        option_table[total][list.length].push(list);
+      }
+      if (digit > 9) {
         return;
       }
-      if (total < 0 || partition < 0 || n > 9) {
-        return;
+      genOptions(digit + 1, total + digit, [...list, digit], true);
+      genOptions(digit + 1, total, list);
+    }
+
+    function getOptions(total, partition) {
+      if (!option_table[total]) {
+        return [];
       }
-      yield* showOptionsHelper(total - n, partition - 1, n + 1, [...chosen, n]);
-      yield* showOptionsHelper(total, partition, n + 1, chosen);
+      return option_table[total][partition] || [];
     }
   </script>
 </body>
