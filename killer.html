@@ -25,7 +25,6 @@
       text-align: center;
       vertical-align: text-bottom;
       line-height: 50px;
-      border: 2px;
       background: #eee;
       margin: 2px;
       font-family: monospace;
@@ -36,22 +35,20 @@
       display: table;
     }
     .total.selected {
-      background: #f00
+      background: #f00;
     }
-
     .partitions {
       margin-top: 10px;
       padding: 2px;
       display: table;
     }
     .partition.selected {
-      background: #f00
+      background: #f00;
     }
     .partition.impossible {
       background: #ccc;
       color: #aaa;
     }
-
     .options {
       margin-top: 10px;
       padding: 2px;
@@ -71,48 +68,48 @@
   <div class="partitions"></div>
   <div class="options"></div>
   <script>
-    let totals = $('.totals');
-    let partitions = $('.partitions');
-    let options = $('.options');
-
     let option_table = [];
     genOptions();
     let selected_total = 0;
     let selected_partition = 0;
 
-      for (let n = 0; n <= 45; n++) {
-        totals.append($('<div class="button total">' + n + '</div>').on("mousedown", function() {
-          $('.total.selected').removeClass('selected');
-          $(this).addClass('selected');
-          selected_total = parseInt($(this).text(), 10);
-          partitions.children().each(function () {
-            let el = $(this);
-            const partition = parseInt(el.text(), 10);
-            el.toggleClass('impossible', getOptions(selected_total, partition).length === 0);
-          });
-          showOptions();
-        }));
+    let totals = $('.totals').on("mousedown", ".total", function() {
+      $('.total.selected').removeClass('selected');
+      $(this).addClass('selected');
+      selected_total = parseInt($(this).text(), 10);
+      partitions.children().each(function () {
+        let el = $(this);
+        const partition = parseInt(el.text(), 10);
+        el.toggleClass('impossible', getOptions(selected_total, partition).length === 0);
+      });
+      showOptions();
+    });
+    let partitions = $('.partitions').on("mousedown", ".partition", function() {
+      let el = $(this);
+      if (el.hasClass('impossible')) {
+        return;
       }
+      $('.partition.selected').removeClass('selected');
+      el.addClass('selected');
+      selected_partition = parseInt(el.text(), 10);
+      showOptions();
+    });
+    let options = $('.options').on("mousedown", ".option", function() {
+      $(this).toggleClass('selected');
+    });
+
+    for (let n = 0; n <= 45; n++) {
+      totals.append('<div class="button total">' + n + '</div>');
+    }
 
     for (let n = 1; n <= 9; n++) {
-      partitions.append($('<div class="button partition">' + n + '</div>').on("mousedown", function() {
-        let el = $(this);
-        if (el.hasClass('impossible')) {
-          return;
-        }
-        $('.partition.selected').removeClass('selected');
-        el.addClass('selected');
-        selected_partition = parseInt(el.text(), 10);
-        showOptions();
-      }));
+      partitions.append('<div class="button partition">' + n + '</div>');
     }
 
     function showOptions() {
       options.empty();
       for (let option of getOptions(selected_total, selected_partition)) {
-        options.append($('<div class="button option">' + option.join('') + '</div>').on("mousedown", function() {
-          $(this).toggleClass('selected');
-        }));
+        options.append('<div class="button option">' + option.join('') + '</div>');
       }
     }
 
