@@ -1,0 +1,30 @@
+<script>
+  function worker_function() {
+    self.onmessage = function(e) {
+      self.postMessage(self.name + ': ' + e.data + ' sucks');
+    }
+  }
+
+  function workerMessage(event) {
+    console.log("Message from worker:", event);
+    let w = work.next();
+    if (!w.done) {
+      event.srcElement.postMessage(w.value);
+    }
+  }
+
+  const work = (function* generator() {
+    let n = 0;
+    while (n++ < 100) {
+      yield n
+    }
+  })();
+
+  for (let numWorkers = 10; numWorkers--; ) {
+    var worker = new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'})), {
+      'name': 'Worker ' + numWorkers
+    });
+    worker.addEventListener("message", workerMessage);
+    worker.postMessage(work.next().value)
+  }
+</script>
