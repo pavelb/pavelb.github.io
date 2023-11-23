@@ -12,9 +12,9 @@
     <textarea id="input" rows="6" cols="64" placeholder="Input"></textarea>
     <textarea id="output" rows="6" cols="64" placeholder="Output"></textarea>
     <script>
-      const twiceTheDeal = s => s.replace(/../g, c=>String.fromCharCode(c.charCodeAt(0) << 8 | c.charCodeAt(1)));
+      const twiceTheDeal = s => "eval(unescape(escape`" + s.replace(/../g, c=>String.fromCharCode(c.charCodeAt(0) << 8 | c.charCodeAt(1))) + "`.replace(/u([^D].)/g,'$1%')))";
       input.addEventListener('input', _ => {
-        output.value = "eval(unescape(escape`" + twiceTheDeal(input.value) + "`.replace(/u([^D].)/g,'$1%')))";
+        output.value = twiceTheDeal(input.value);
       });
     </script>
   </body>
