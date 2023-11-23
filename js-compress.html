@@ -14,7 +14,7 @@
     <script>
       const twiceTheDeal = s => s.replace(/../g, c=>String.fromCharCode(c.charCodeAt(0) << 8 | c.charCodeAt(1)));
       input.addEventListener('input', _ => {
-        output.value = "eval(unescape(escape`" + twiceTheDeal(input.value) + "`.replace(/u(..)(..)/g,'u00$1%u00$2')))";
+        output.value = "eval(unescape(escape`" + twiceTheDeal(input.value) + "`.replace(/u([^D].)/g,'$1%')))";
       });
     </script>
   </body>
