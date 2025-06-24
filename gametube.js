@@ -27,7 +27,7 @@ function showGame(game) {
       console.log('video_details', video_details);
       const lengthSeconds = moment.duration(video_details.items[0].contentDetails.duration).asSeconds();
       const startSeconds = irng(lengthSeconds/3, 2*lengthSeconds/3);
-      const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startSeconds}&iv_load_policy=3&modestbranding=1&listType=search&list=${q}`;
+      const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startSeconds}&iv_load_policy=3&modestbranding=1`;
       document.getElementById('frame').src = embedUrl;
     });
   });
