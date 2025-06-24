@@ -34,6 +34,10 @@ function showGame(game) {
   });
 }
 
+function showGame2(game) {
+  window.open('https://www.youtube.com/results?search_query=' + game + ' gameplay')
+}
+
 function processRawRows(row_data) {
   var raw_rows = row_data.split('\n');
   var rows = [];
@@ -61,7 +65,7 @@ function showRandomGame(row_data) {
   console.log('rows', rows);
   var row = random(rows);
   console.log('row', row);
-  showGame(row[0]);
+  showGame2(row[0]);
 }
 
 function playForPavel() {
