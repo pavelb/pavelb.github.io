@@ -25,9 +25,10 @@ function showGame(game) {
     var video_id = random(search_results.items).id.videoId;
     $.get('https://content.googleapis.com/youtube/v3/videos?part=contentDetails&id=' + video_id + '&key=' + API_KEY, function(video_details) {
       console.log('video_details', video_details);
-      var length = moment.duration(video_details.items[0].contentDetails.duration).asSeconds();
-      var start = irng(length/3, 2*length/3);
-      document.getElementById('frame').src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=' + start + '&listType=search&list=' + q;
+      const lengthSeconds = moment.duration(video_details.items[0].contentDetails.duration).asSeconds();
+      const startSeconds = irng(lengthSeconds/3, 2*lengthSeconds/3);
+      const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startSeconds}&iv_load_policy=3&modestbranding=1&loop=1&playlist=${q}`;
+      document.getElementById('frame').src = embedUrl;
     });
   });
 }
