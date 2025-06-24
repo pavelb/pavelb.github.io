@@ -1,4 +1,4 @@
-var API_KEY = 'AIzaSyC3uMzqmK2CNozX73J8SryDZ5agvtDymUc';
+var API_KEY = atob('QUl6YVN5Q2R5NGZQVThMckt0djRDX1ZxRTlTellxRURGZ01wNjY0');
 var PLAY_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=11&single=true&output=csv';
 var DONE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS-a7O8wuUkBCmoyrCZyfJAMPx1zbM8tianwBpnzWD6lP5a8tp4CkGBRfxi2oYJSwRErpUr1n-1sLe1/pub?gid=12&single=true&output=csv';
 
