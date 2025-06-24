@@ -21,10 +21,10 @@ function showGame(game) {
   $(document).attr('title', q);
   q = encodeURIComponent(q);
   $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&key=' + API_KEY + '&q=' + q, function(search_results) {
-    console.log(search_results);
+    console.log('search_results', search_results);
     var video_id = random(search_results.items).id.videoId;
     $.get('https://content.googleapis.com/youtube/v3/videos?part=contentDetails&id=' + video_id + '&key=' + API_KEY, function(video_details) {
-      console.log(video_details);
+      console.log('video_details', video_details);
       var length = moment.duration(video_details.items[0].contentDetails.duration).asSeconds();
       var start = irng(length/3, 2*length/3);
       document.getElementById('frame').src = 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&start=' + start + '&listType=search&list=' + q;
@@ -56,10 +56,10 @@ function processRawRows(row_data) {
 
 function showRandomGame(row_data) {
   var rows = processRawRows(row_data);
-  console.log(rows);
+  console.log('rows', rows);
   var row = random(rows);
   console.log(row);
-  showGame(row[0]);
+  showGame('row', row[0]);
 }
 
 function playForPavel() {
