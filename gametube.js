@@ -22,8 +22,8 @@ function showGame(game) {
   q = encodeURIComponent(q);
   $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&key=' + API_KEY + '&q=' + q, function(search_results) {
     console.log('search_results', search_results);
-    var video_id = random(search_results.items).id.videoId;
-    $.get('https://content.googleapis.com/youtube/v3/videos?part=contentDetails&id=' + video_id + '&key=' + API_KEY, function(video_details) {
+    const videoId = random(search_results.items).id.videoId;
+    $.get('https://content.googleapis.com/youtube/v3/videos?part=contentDetails&id=' + videoId + '&key=' + API_KEY, function(video_details) {
       console.log('video_details', video_details);
       const lengthSeconds = moment.duration(video_details.items[0].contentDetails.duration).asSeconds();
       const startSeconds = irng(lengthSeconds/3, 2*lengthSeconds/3);
