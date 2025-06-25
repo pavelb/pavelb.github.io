@@ -55,7 +55,8 @@
             text-align: center;
             font-size: 1.2em;
             color: #777;
-            padding: 40px;
+            padding-top: 20px;
+            padding-bottom: 20px;
         }
     </style>
 </head>
@@ -131,11 +132,10 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Tournament Name</th>
+                            <th>Name</th>
                             <th>Time Control</th>
-                            <th>Category / Variant</th>
                             <th>Time Left</th>
-                            <th>Top 3 Players</th>
+                            <th>Players</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -152,7 +152,6 @@
                     <tr>
                         <td><a href="https://lichess.org/tournament/${tourn.id}">${tourn.fullName}</a></td>
                         <td>${timeControl}</td>
-                        <td>${tourn.perf.name}</td>
                         <td>${timeLeft}</td>
                         <td class="players-list">${topPlayers}</td>
                     </tr>
