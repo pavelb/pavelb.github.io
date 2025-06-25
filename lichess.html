@@ -59,6 +59,7 @@
         }
         #time-control {
             color: #777;
+            max-width: 100px;
         }
     </style>
 </head>
@@ -85,25 +86,30 @@
                     return response.json();
                 })
                 .then(data => {
-                    const ongoingTournaments = data.started;
+                    let ongoingTournaments = data.started;
+                    console.log(ongoingTournaments);
 
                     if (ongoingTournaments.length === 0) {
                         container.innerHTML = '<p class="loading">No ongoing tournaments found.</p>';
                         return;
                     }
 
+                    ongoingTournaments = ongoingTournaments.filter((tourney) => tourney.variant.key === 'standard' && !(tourney.maxRating && tourney.maxRating.rating <= 1500));
+
                     container.querySelector('.loading').textContent = `Fetching details for ${ongoingTournaments.length} tournaments...`;
 
                     // Step 2: Create an array of promises, one for each tournament's detail fetch
-                    const detailPromises = ongoingTournaments.map(tourn =>
-                        fetch(`https://lichess.org/api/tournament/${tourn.id}`)
+                    const detailPromises = ongoingTournaments.map(tourney =>
+                        fetch(`https://lichess.org/api/tournament/${tourney.id}`)
                             .then(res => {
                                 if (!res.ok) {
                                     // If a single tournament fetch fails, log it but don't stop the others
-                                    console.error(`Failed to fetch details for tournament ${tourn.id}`);
+                                    console.error(`Failed to fetch details for tournament ${tourney.id}`);
                                     return null; // Return null to be filtered out later
                                 }
                                 return res.json();
+                            }).then(info => {
+                                return {...tourney, ...info};
                             })
                     );
 
@@ -120,8 +126,8 @@
                     }
 
                     // Sort by time
-                    validTournaments.sort(function(tourn1, tourn2) {
-                        return (tourn1.clock.limit - tourn2.clock.limit) || (tourn1.clock.increment - tourn1.clock.increment);
+                    validTournaments.sort(function(tourney1, tourney2) {
+                        return (tourney1.clock.limit - tourney2.clock.limit) || (tourney1.clock.increment - tourney1.clock.increment);
                     });
                     
                     // Now we have the full data, including player standings. Build the table.
@@ -146,15 +152,19 @@
                     <tbody>
             `;
 
-            tournaments.forEach(tourn => {
-                const clockLimitMinutes = tourn.clock.limit / 60;
-                const timeControl = `${clockLimitMinutes}+${tourn.clock.increment}`;
+            tournaments.forEach(tourney => {
+                console.log(tourney);
+                const clockLimitMinutes = tourney.clock.limit / 60;
+                const timeControl = `${clockLimitMinutes}+${tourney.clock.increment}`;
                 // The 'standing' object with the 'players' array is now available
-                const topPlayers = formatTopPlayers(tourn.standing?.players);
+                const topPlayers = formatTopPlayers(tourney.standing?.players);
 
                 tableHTML += `
                     <tr>
-                        <td><a href="https://lichess.org/tournament/${tourn.id}">${tourn.fullName}</a><div id="time-control">${timeControl}</div></td>
+                        <td>
+                            <a href="https://lichess.org/tournament/${tourney.id}">${tourney.fullName}</a>
+                            <div id="time-control">${timeControl}</div>
+                        </td>
                         <td class="players-list">${topPlayers}</td>
                     </tr>
                 `;
