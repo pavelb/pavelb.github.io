@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lichess Tournaments</title>
+    <style>
+        body {
+            font-family: Helvetica;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #0077cc;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        a {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .players-list a {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .players-list a:last-child {
+            margin-bottom: 0;
+        }
+        .loading {
+            text-align: center;
+            font-size: 1.2em;
+            color: #777;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="tournaments-container">
+            <div class="loading">Loading tournament list from Lichess...</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchAndDisplayTournaments);
+
+        function fetchAndDisplayTournaments() {
+            const LICHESS_API_URL = 'https://lichess.org/api/tournament';
+            const container = document.getElementById('tournaments-container');
+
+            // Step 1: Fetch the summary list of ongoing tournaments
+            fetch(LICHESS_API_URL)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const ongoingTournaments = data.started;
+
+                    if (ongoingTournaments.length === 0) {
+                        container.innerHTML = '<p class="loading">No ongoing tournaments found.</p>';
+                        return;
+                    }
+
+                    container.querySelector('.loading').textContent = `Fetching details for ${ongoingTournaments.length} tournaments...`;
+
+                    // Step 2: Create an array of promises, one for each tournament's detail fetch
+                    const detailPromises = ongoingTournaments.map(tourn =>
+                        fetch(`https://lichess.org/api/tournament/${tourn.id}`)
+                            .then(res => {
+                                if (!res.ok) {
+                                    // If a single tournament fetch fails, log it but don't stop the others
+                                    console.error(`Failed to fetch details for tournament ${tourn.id}`);
+                                    return null; // Return null to be filtered out later
+                                }
+                                return res.json();
+                            })
+                    );
+
+                    // Step 3: Wait for all detail fetches to complete
+                    return Promise.all(detailPromises);
+                })
+                .then(detailedTournaments => {
+                    // Filter out any null results from failed fetches
+                    const validTournaments = detailedTournaments.filter(t => t !== null);
+                    
+                    if (!validTournaments || validTournaments.length === 0) {
+                        container.innerHTML = '<p class="loading">Could not load tournament details.</p>';
+                        return;
+                    }
+                    
+                    // Now we have the full data, including player standings. Build the table.
+                    buildTable(validTournaments);
+                })
+                .catch(error => {
+                    console.error('Error during the fetch process:', error);
+                    container.innerHTML = `<p class="loading" style="color: red;">Failed to load tournament data. Please check the console for errors.</p>`;
+                });
+        }
+
+        function buildTable(tournaments) {
+            const container = document.getElementById('tournaments-container');
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tournament Name</th>
+                            <th>Time Control</th>
+                            <th>Category / Variant</th>
+                            <th>Time Left</th>
+                            <th>Top 3 Players</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            tournaments.forEach(tourn => {
+                const clockLimitMinutes = tourn.clock.limit / 60;
+                const timeControl = `${clockLimitMinutes}+${tourn.clock.increment}`;
+                const timeLeft = formatTimeLeft(tourn.secondsToFinish);
+                // The 'standing' object with the 'players' array is now available
+                const topPlayers = formatTopPlayers(tourn.standing?.players);
+
+                tableHTML += `
+                    <tr>
+                        <td><a href="https://lichess.org/tournament/${tourn.id}">${tourn.fullName}</a></td>
+                        <td>${timeControl}</td>
+                        <td>${tourn.perf.name}</td>
+                        <td>${timeLeft}</td>
+                        <td class="players-list">${topPlayers}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        function formatTimeLeft(secondsToFinish) {
+            if (secondsToFinish <= 0) return "Finished";
+
+            const minutes = Math.floor(secondsToFinish / 60);
+            const seconds = secondsToFinish % 60;
+
+            return `${minutes}m ${seconds.toString().padStart(2, '0')}s`;
+        }
+
+        function formatTopPlayers(players) {
+            if (!players || players.length === 0) {
+                return "No players ranked yet.";
+            }
+
+            const top3 = players.slice(0, 3);
+            return top3.map(player => {
+                const playerName = player.name;
+                const tvUrl = `https://lichess.org/@/${playerName}/tv`;
+                return `<a href="${tvUrl}" title="${playerName}">${playerName} (${player.rating})</a>`;
+            }).join('');
+        }
+    </script>
+
+</body>
+</html>
