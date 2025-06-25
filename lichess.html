@@ -21,7 +21,7 @@
             border-collapse: collapse;
         }
         th, td {
-            padding: 12px 15px;
+            padding: 6px;
             border: 1px solid #ddd;
             text-align: left;
         }
@@ -39,7 +39,6 @@
         a {
             color: #0056b3;
             text-decoration: none;
-            font-weight: bold;
         }
         a:hover {
             text-decoration: underline;
@@ -57,6 +56,9 @@
             color: #777;
             padding-top: 20px;
             padding-bottom: 20px;
+        }
+        #time-control {
+            color: #777;
         }
     </style>
 </head>
@@ -116,6 +118,11 @@
                         container.innerHTML = '<p class="loading">Could not load tournament details.</p>';
                         return;
                     }
+
+                    // Sort by time
+                    validTournaments.sort(function(tourn1, tourn2) {
+                        return (tourn1.clock.limit - tourn2.clock.limit) || (tourn1.clock.increment - tourn1.clock.increment);
+                    });
                     
                     // Now we have the full data, including player standings. Build the table.
                     buildTable(validTournaments);
@@ -132,10 +139,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Time Control</th>
-                            <th>Time Left</th>
-                            <th>Players</th>
+                            <th>Tournament</th>
+                            <th>Top Players</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,15 +149,12 @@
             tournaments.forEach(tourn => {
                 const clockLimitMinutes = tourn.clock.limit / 60;
                 const timeControl = `${clockLimitMinutes}+${tourn.clock.increment}`;
-                const timeLeft = formatTimeLeft(tourn.secondsToFinish);
                 // The 'standing' object with the 'players' array is now available
                 const topPlayers = formatTopPlayers(tourn.standing?.players);
 
                 tableHTML += `
                     <tr>
-                        <td><a href="https://lichess.org/tournament/${tourn.id}">${tourn.fullName}</a></td>
-                        <td>${timeControl}</td>
-                        <td>${timeLeft}</td>
+                        <td><a href="https://lichess.org/tournament/${tourn.id}">${tourn.fullName}</a><div id="time-control">${timeControl}</div></td>
                         <td class="players-list">${topPlayers}</td>
                     </tr>
                 `;
@@ -164,15 +166,6 @@
             `;
             
             container.innerHTML = tableHTML;
-        }
-
-        function formatTimeLeft(secondsToFinish) {
-            if (secondsToFinish <= 0) return "Finished";
-
-            const minutes = Math.floor(secondsToFinish / 60);
-            const seconds = secondsToFinish % 60;
-
-            return `${minutes}m ${seconds.toString().padStart(2, '0')}s`;
         }
 
         function formatTopPlayers(players) {
