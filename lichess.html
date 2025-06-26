@@ -7,14 +7,13 @@
     <style>
         body {
             font-family: Helvetica;
-            background-color: #f4f4f4;
+            background-color: rgb(22, 21, 18);
             color: #333;
             margin: 0;
         }
         .container {
-            max-width: 1200px;
+            max-width: 430px;
             margin: auto;
-            background: #fff;
         }
         table {
             width: 100%;
@@ -22,22 +21,22 @@
         }
         th, td {
             padding: 6px;
-            border: 1px solid #ddd;
+            border: 1px solid rgb(148, 148, 148);
             text-align: left;
         }
         th {
-            background-color: #0077cc;
-            color: #ffffff;
+            background-color: rgba(52, 49, 45, 1);
+            color: rgb(148, 148, 148);
             font-weight: bold;
         }
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: rgb(52, 49, 45);
         }
-        tr:hover {
-            background-color: #f1f1f1;
+        tr:nth-child(odd) {
+            background-color: rgba(52, 49, 45, 0.5);
         }
         a {
-            color: #0056b3;
+            color: rgb(148, 148, 148);
             text-decoration: none;
         }
         a:hover {
@@ -65,17 +64,17 @@
 </head>
 <body>
     <div class="container">
-        <div id="tournaments-container">
-            <div class="loading">Loading tournament list from Lichess...</div>
-        </div>
+        <div id="tournaments-container"></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', fetchAndDisplayTournaments);
+        window.addEventListener('focus', fetchAndDisplayTournaments);
 
         function fetchAndDisplayTournaments() {
             const LICHESS_API_URL = 'https://lichess.org/api/tournament';
             const container = document.getElementById('tournaments-container');
+            container.innerHTML = '<p class="loading">Loading tournament list from Lichess...</p>';
 
             // Step 1: Fetch the summary list of ongoing tournaments
             fetch(LICHESS_API_URL)
