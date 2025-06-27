@@ -8,7 +8,7 @@
         body {
             font-family: Helvetica;
             background-color: rgb(22, 21, 18);
-            color: #333;
+            color: rgb(148, 148, 148);
             margin: 0;
         }
         .container {
@@ -27,7 +27,6 @@
         th {
             background-color: rgba(52, 49, 45, 1);
             border-bottom: 1px solid rgb(148, 148, 148);
-            color: rgb(148, 148, 148);
             font-weight: bold;
         }
         tr:nth-child(even) {
@@ -43,12 +42,13 @@
         a:hover {
             text-decoration: underline;
         }
-        .players-list a {
-            display: block;
-            margin-bottom: 5px;
+        .players-list ol {
+            padding: 0px;
+            margin: 0px;
         }
-        .players-list a:last-child {
-            margin-bottom: 0;
+         .players-list li {
+            padding: 2px;
+            list-style-type: none;
         }
         .loading {
             text-align: center;
@@ -124,9 +124,11 @@
                                     <div id="time-control">${timeControl}</div>
                                 </td>
                                 <td class="players-list">
-                                    <a>Loading...</a>
-                                    <a>Loading...</a>
-                                    <a>Loading...</a>
+                                    <ol>
+                                        <li>Loading...</li>
+                                        <li>Loading...</li>
+                                        <li>Loading...</li>
+                                    </ol>
                                 </td>
                             </tr>
                         `;
@@ -138,9 +140,19 @@
                                 }
                                 return response.json();
                             }).then(tourney => {
-                                const topPlayers = formatTopPlayers(tourney.standing?.players);
-                                const container = document.querySelector(`#tourney_${tourney.id} .players-list`);
-                                container.innerHTML = topPlayers;
+                                const playersList = document.querySelector(`#tourney_${tourney.id} .players-list`);
+
+                                const players = tourney.standing?.players;
+                                if (!players || players.length === 0) {
+                                    playersList.innerHTML = "No ranked players yet.";
+                                    return;
+                                }
+
+                                const top3 = players.slice(0, 3);
+                                top3.map((player, index) => {
+                                    let anchor = playersList.querySelector(`li:nth-child(${index + 1})`);
+                                    anchor.innerHTML = `<a href="https://lichess.org/@/${player.name}/tv">${player.name} (${player.rating})</a>`;
+                                });
                             });
                     });
 
@@ -151,19 +163,6 @@
                     
                     container.innerHTML = tableHTML;
                 });
-        }
-
-        function formatTopPlayers(players) {
-            if (!players || players.length === 0) {
-                return "No players ranked yet.";
-            }
-
-            const top3 = players.slice(0, 3);
-            return top3.map(player => {
-                const playerName = player.name;
-                const tvUrl = `https://lichess.org/@/${playerName}/tv`;
-                return `<a href="${tvUrl}" title="${playerName}">${playerName} (${player.rating})</a>`;
-            }).join('');
         }
     </script>
 
