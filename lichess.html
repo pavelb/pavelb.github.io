@@ -22,6 +22,7 @@
         th, td {
             padding: 6px;
             text-align: left;
+            width: 50%;
         }
         th {
             background-color: rgba(52, 49, 45, 1);
@@ -64,7 +65,9 @@
 </head>
 <body>
     <div class="container">
-        <div id="tournaments-container"></div>
+        <div id="tournaments-container">
+            <p class="loading">Loading tournament list from Lichess...</p>
+        </div>
     </div>
 
     <script>
@@ -73,10 +76,8 @@
 
         function fetchAndDisplayTournaments() {
             const LICHESS_API_URL = 'https://lichess.org/api/tournament';
-            const container = document.getElementById('tournaments-container');
-            container.innerHTML = '<p class="loading">Loading tournament list from Lichess...</p>';
+            let container = document.getElementById('tournaments-container');
 
-            // Step 1: Fetch the summary list of ongoing tournaments
             fetch(LICHESS_API_URL)
                 .then(response => {
                     if (!response.ok) {
@@ -85,96 +86,66 @@
                     return response.json();
                 })
                 .then(data => {
-                    let ongoingTournaments = data.started;
-                    console.log(ongoingTournaments);
+                    let tourneys = data.started;
+                    console.log(tourneys);
 
-                    if (ongoingTournaments.length === 0) {
+                    tourneys = tourneys.filter((tourney) => tourney.variant.key === 'standard' && !(tourney.maxRating && tourney.maxRating.rating <= 1500));
+
+                    if (tourneys.length === 0) {
                         container.innerHTML = '<p class="loading">No ongoing tournaments found.</p>';
                         return;
                     }
 
-                    ongoingTournaments = ongoingTournaments.filter((tourney) => tourney.variant.key === 'standard' && !(tourney.maxRating && tourney.maxRating.rating <= 1500));
-
-                    container.querySelector('.loading').textContent = `Fetching details for ${ongoingTournaments.length} tournaments...`;
-
-                    // Step 2: Create an array of promises, one for each tournament's detail fetch
-                    const detailPromises = ongoingTournaments.map(tourney =>
-                        fetch(`https://lichess.org/api/tournament/${tourney.id}`)
-                            .then(res => {
-                                if (!res.ok) {
-                                    // If a single tournament fetch fails, log it but don't stop the others
-                                    console.error(`Failed to fetch details for tournament ${tourney.id}`);
-                                    return null; // Return null to be filtered out later
-                                }
-                                return res.json();
-                            }).then(info => {
-                                return {...tourney, ...info};
-                            })
-                    );
-
-                    // Step 3: Wait for all detail fetches to complete
-                    return Promise.all(detailPromises);
-                })
-                .then(detailedTournaments => {
-                    // Filter out any null results from failed fetches
-                    const validTournaments = detailedTournaments.filter(t => t !== null);
-                    
-                    if (!validTournaments || validTournaments.length === 0) {
-                        container.innerHTML = '<p class="loading">Could not load tournament details.</p>';
-                        return;
-                    }
-
                     // Sort by time
-                    validTournaments.sort(function(tourney1, tourney2) {
+                    tourneys.sort(function(tourney1, tourney2) {
                         return (tourney1.clock.limit - tourney2.clock.limit) || (tourney1.clock.increment - tourney1.clock.increment);
                     });
+
+                    let tableHTML = `
+                        <table>
+                            <thead><tr><th>Tournament</th><th>Top Players</th></tr></thead>
+                            <tbody>
+                    `;
+
+                    tourneys.forEach(tourney => {
+                        console.log(tourney);
+                        const clockLimitMinutes = tourney.clock.limit / 60;
+                        const timeControl = `${clockLimitMinutes} + ${tourney.clock.increment}`;
+
+                        tableHTML += `
+                            <tr id="tourney_${tourney.id}">
+                                <td>
+                                    <a href="https://lichess.org/tournament/${tourney.id}">${tourney.fullName}</a>
+                                    <div id="time-control">${timeControl}</div>
+                                </td>
+                                <td class="players-list">
+                                    <a>Loading...</a>
+                                    <a>Loading...</a>
+                                    <a>Loading...</a>
+                                </td>
+                            </tr>
+                        `;
+
+                        fetch(`https://lichess.org/api/tournament/${tourney.id}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                                }
+                                return response.json();
+                            }).then(tourney => {
+                                const topPlayers = formatTopPlayers(tourney.standing?.players);
+                                const container = document.querySelector(`#tourney_${tourney.id} .players-list`);
+                                container.innerHTML = topPlayers;
+                            });
+                    });
+
+                    tableHTML += `
+                            </tbody>
+                        </table>
+                    `;
                     
-                    // Now we have the full data, including player standings. Build the table.
-                    buildTable(validTournaments);
-                })
-                .catch(error => {
-                    console.error('Error during the fetch process:', error);
-                    container.innerHTML = `<p class="loading" style="color: red;">Failed to load tournament data. Please check the console for errors.</p>`;
+                    container.innerHTML = tableHTML;
                 });
-        }
-
-        function buildTable(tournaments) {
-            const container = document.getElementById('tournaments-container');
-            let tableHTML = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tournament</th>
-                            <th>Top Players</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
-            tournaments.forEach(tourney => {
-                console.log(tourney);
-                const clockLimitMinutes = tourney.clock.limit / 60;
-                const timeControl = `${clockLimitMinutes}+${tourney.clock.increment}`;
-                // The 'standing' object with the 'players' array is now available
-                const topPlayers = formatTopPlayers(tourney.standing?.players);
-
-                tableHTML += `
-                    <tr>
-                        <td>
-                            <a href="https://lichess.org/tournament/${tourney.id}">${tourney.fullName}</a>
-                            <div id="time-control">${timeControl}</div>
-                        </td>
-                        <td class="players-list">${topPlayers}</td>
-                    </tr>
-                `;
-            });
-
-            tableHTML += `
-                    </tbody>
-                </table>
-            `;
-            
-            container.innerHTML = tableHTML;
         }
 
         function formatTopPlayers(players) {
