@@ -66,13 +66,18 @@
 <body>
     <div class="container">
         <div id="tournaments-container">
-            <p class="loading">Loading tournament list from Lichess...</p>
+            <p class="loading">Loading tournament list...</p>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', fetchAndDisplayTournaments);
-        window.addEventListener('focus', fetchAndDisplayTournaments);
+        // window.addEventListener('focus', fetchAndDisplayTournaments);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === "visible") {
+                fetchAndDisplayTournaments();
+            }
+        });
 
         function fetchAndDisplayTournaments() {
             const LICHESS_API_URL = 'https://lichess.org/api/tournament';
