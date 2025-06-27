@@ -80,28 +80,25 @@
         });
 
         function fetchAndDisplayTournaments() {
-            const LICHESS_API_URL = 'https://lichess.org/api/tournament';
-            let container = document.getElementById('tournaments-container');
-
-            fetch(LICHESS_API_URL)
+            fetch('https://lichess.org/api/tournament')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Network response was not ok: ${response.statusText}`);
                     }
                     return response.json();
                 })
-                .then(data => {
-                    let tourneys = data.started;
+                .then(allTourneys => {
+                    let tourneys = allTourneys.started;
                     console.log(tourneys);
 
-                    tourneys = tourneys.filter((tourney) => tourney.variant.key === 'standard' && !(tourney.maxRating && tourney.maxRating.rating <= 1500));
+                    tourneys = tourneys.filter(tourney => tourney.variant.key === 'standard' && !(tourney.maxRating && tourney.maxRating.rating <= 1500));
 
                     if (tourneys.length === 0) {
-                        container.innerHTML = '<p class="loading">No ongoing tournaments found.</p>';
+                        document.getElementById('tournaments-container').innerHTML = '<p class="loading">No ongoing tournaments found.</p>';
                         return;
                     }
 
-                    // Sort by time
+                    // Sort by time format
                     tourneys.sort(function(tourney1, tourney2) {
                         return (tourney1.clock.limit - tourney2.clock.limit) || (tourney1.clock.increment - tourney1.clock.increment);
                     });
@@ -114,14 +111,12 @@
 
                     tourneys.forEach(tourney => {
                         console.log(tourney);
-                        const clockLimitMinutes = tourney.clock.limit / 60;
-                        const timeControl = `${clockLimitMinutes} + ${tourney.clock.increment}`;
 
                         tableHTML += `
                             <tr id="tourney_${tourney.id}">
                                 <td>
                                     <a href="https://lichess.org/tournament/${tourney.id}">${tourney.fullName}</a>
-                                    <div id="time-control">${timeControl}</div>
+                                    <div id="time-control">${tourney.clock.limit / 60} + ${tourney.clock.increment}</div>
                                 </td>
                                 <td class="players-list">
                                     <ol>
@@ -144,15 +139,13 @@
 
                                 const players = tourney.standing?.players;
                                 if (!players || players.length === 0) {
-                                    playersList.innerHTML = "No ranked players yet.";
+                                    playersList.innerHTML = 'No ranked players yet.';
                                     return;
                                 }
 
-                                const top3 = players.slice(0, 3);
-                                top3.map((player, index) => {
-                                    let anchor = playersList.querySelector(`li:nth-child(${index + 1})`);
-                                    anchor.innerHTML = `<a href="https://lichess.org/@/${player.name}/tv">${player.name} (${player.rating})</a>`;
-                                });
+                                playersList.innerHTML = '<ol>' + players.slice(0, 3).map((player, index) => {
+                                    return `<li><a href="https://lichess.org/@/${player.name}/tv">${player.name} (${player.rating})</a></li>`;
+                                }).join('') + '</ol>';
                             });
                     });
 
@@ -161,10 +154,9 @@
                         </table>
                     `;
                     
-                    container.innerHTML = tableHTML;
+                    document.getElementById('tournaments-container').innerHTML = tableHTML;
                 });
         }
     </script>
-
 </body>
 </html>
