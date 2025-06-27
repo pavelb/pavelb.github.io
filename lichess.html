@@ -21,14 +21,12 @@
         }
         th, td {
             padding: 6px;
-            text-align: left;
-            width: 50%;
         }
         th {
             background-color: rgba(52, 49, 45, 1);
-            border-bottom: 1px solid rgb(148, 148, 148);
             font-size: 16px;
             font-weight: bold;
+            text-align: left;
         }
         tr:nth-child(even) {
             background-color: rgb(52, 49, 45);
@@ -43,13 +41,23 @@
         a:hover {
             text-decoration: underline;
         }
+        .tourney_info {
+            width: 40%;
+        }
+        .players-list {
+            width: 60%;
+        }
         .players-list ol {
             padding: 0px;
             margin: 0px;
         }
-         .players-list li {
+        .players-list li {
             padding: 2px;
             list-style-type: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 240px;
         }
         .loading {
             text-align: center;
@@ -79,6 +87,7 @@
                 fetchAndDisplayTournaments();
             }
         });
+        setInterval(fetchAndDisplayTournaments, 5 * 60 * 1000);
 
         function fetchAndDisplayTournaments() {
             fetch('https://lichess.org/api/tournament')
@@ -115,7 +124,7 @@
 
                         tableHTML += `
                             <tr id="tourney_${tourney.id}">
-                                <td>
+                                <td class="tourney_info">
                                     <a href="https://lichess.org/tournament/${tourney.id}">${tourney.fullName}</a>
                                     <div id="time-control">${tourney.clock.limit / 60} + ${tourney.clock.increment}</div>
                                 </td>
@@ -145,7 +154,7 @@
                                 }
 
                                 playersList.innerHTML = '<ol>' + players.slice(0, 3).map((player, index) => {
-                                    return `<li><a href="https://lichess.org/@/${player.name}/tv">${player.name} (${player.rating})</a></li>`;
+                                    return `<li><a href="https://lichess.org/@/${player.name}/tv">${player.rating}&nbsp;&nbsp;${player.name}</a></li>`;
                                 }).join('') + '</ol>';
                             });
                     });
